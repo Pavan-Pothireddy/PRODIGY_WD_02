@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+</head>
+<body>
+    <div class="container">
+        <div class="stopwatch">
+            <div class="circle">
+                <div id="time">00:00:00</div>
+            </div>
+            <div class="controls">
+                <button id="startBtn">Start</button>
+                <button id="stopBtn" disabled>Stop</button>
+                <button id="resetBtn">Reset</button>
+            </div>
+        </div>
+    </div>
+    <style>
+      body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('https://images.unsplash.com/photo-1524671470795-c7d181eca26e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHRpbWV8ZW58MHx8MHx8fDA%3D');
+    background-size: cover;
+    background-position: center;
+}
+
+.container {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.stopwatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #f0f0f0 50%, #d0d0d0 50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+#time {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+button {
+    margin: 0 5px;
+    padding: 10px 15px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #FFD700;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #FFC107;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+    </style>
+    <script>
+      let startTime;
+let updatedTime;
+let difference;
+let tInterval;
+let running = false;
+
+const timeDisplay = document.getElementById("time");
+const startBtn = document.getElementById("startBtn");
+const stopBtn = document.getElementById("stopBtn");
+const resetBtn = document.getElementById("resetBtn");
+
+startBtn.addEventListener("click", startTimer);
+stopBtn.addEventListener("click", stopTimer);
+resetBtn.addEventListener("click", resetTimer);
+
+function startTimer() {
+    if (!running) {
+        startTime = new Date().getTime() - (difference || 0);
+        tInterval = setInterval(updateTime, 100);
+        running = true;
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+    }
+}
+
+function stopTimer() {
+    clearInterval(tInterval);
+    running = false;
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+}
+
+function resetTimer() {
+    clearInterval(tInterval);
+    running = false;
+    difference = 0;
+    timeDisplay.innerHTML = "00:00:00";
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+}
+
+function updateTime() {
+    updatedTime = new Date().getTime();
+    difference = updatedTime - startTime;
+
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    timeDisplay.innerHTML = (hours < 10 ? "0" : "") + hours + ":" + 
+                            (minutes < 10 ? "0" : "") + minutes + ":" + 
+                            (seconds < 10 ? "0" : "") + seconds;
+}
+
+    </script>
+</body>
+</html>
